@@ -1,0 +1,107 @@
+---
+title: "luskplot data munging"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+library(jsonlite)
+library(viridis)
+library(tidyboot)
+library(knitr)
+library(ggthemes)
+theme_set(theme_few())
+```
+
+
+```{r}
+df.trials <- read_csv("../data/main-1/amworld-trials-2.csv")
+df.subject <- read_csv("../data/main-1/amworld-subject_information-2.csv")
+df.debrief <- read_csv("../data/main-1/amworld-debrief-2.csv")
+```
+
+From debrief comments
+
+```{r}
+questionable.workers <- c(101, 84, 44)
+```
+
+## Simple problems
+
+```{r}
+df.trials.simple <- df.trials %>%
+  filter(trial_type == "simple") %>%
+  select(-starts_with("number"), -starts_with("price"), -starts_with("store"), -starts_with("objectID_"),
+         -object_1) %>%
+  rename(response = object_0) %>%
+  rowwise() %>%
+  mutate(
+    price = as.numeric(
+        gsub("\\$",  "", ifelse(verb_0 == "costs", amount_0, amount_1))
+      ),
+    weight = as.numeric(
+      strsplit(ifelse(verb_0 == "weighs", amount_0, amount_1), " pounds")[[1]][1]
+    ),
+    price_category = ifelse(verb_0 == "costs", generalAmount_0, generalAmount_1),
+    weight_category = ifelse(verb_0 == "weighs", generalAmount_0, generalAmount_1)
+  ) %>%
+  select(-verb_0, -verb_1, -amount_0, -amount_1, -generalAmount_0, -generalAmount_1)
+```
+
+
+
+```{r}
+df.simple.rawResponse.counts <- df.trials.simple  %>%
+  mutate(response = tolower(response)) %>%
+  group_by(location, price_category, weight_category, price, weight) %>%
+  count(response) %>%
+  ungroup()
+
+df.simple.rawResponse.counts[
+  with(df.simple.rawResponse.counts, order(-n)), 
+  ] %>% kable()
+  
+```
+
+
+## Complex problems
+
+
+```{r}
+df.trials.complex <- df.trials %>%
+  filter(trial_type == "complex") %>%
+  select(-starts_with("verb_"), -starts_with("generalAmount_"), -starts_with("amount_")) %>%
+  mutate(
+    price_0 = as.numeric(
+        gsub("\\$",  "", price_0)
+      ),
+    price_1 = as.numeric(
+        gsub("\\$",  "", price_1)
+    )
+  )
+
+# df.complex.rawResponse.counts <- df.trials.complex  %>%
+#   separate(object_0, into = c("response_obj0_1", "response_obj0_2"), sep = ",") %>%
+#   separate(object_1, into = c("response_obj1_1", "response_obj1_2"), sep = ",") %>%
+#   mutate(
+#     response_obj0_1 = tolower(response_obj0_1),
+#     response_obj0_2 = tolower(response_obj0_2),
+#     response_obj1_1 = tolower(response_obj1_1),
+#     response_obj1_2 = tolower(response_obj1_2), 
+#     store_0 = tolower(store_0),
+#     store_1 = tolower(store_1)
+#     ) %>%
+#   group_by(location, objectID_0_0, objectID_1_0) %>%
+#   count(response) %>%
+#   ungroup()
+
+# df.simple.rawResponse.counts[
+#   with(df.simple.rawResponse.counts, order(-n)), 
+#   ] %>% kable()
+```
+
+
+
+
+
