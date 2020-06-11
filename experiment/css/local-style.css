@@ -1,0 +1,39 @@
+.slider {
+  /* default is width 400 and margin 10 */
+	width: 400;
+	margin: 10px;
+}
+
+.instructions {
+	text-align: justify;
+	margin: 50px;
+}
+
+/* Three image containers (use 25% for four, and 50% for two, etc) */
+.column {
+  float: left;
+  width: 100%;
+  padding: 5px;
+	text-align: center;
+}
+
+/* Clear floats after image containers */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+	text-align: center;
+}
+
+#price_response {
+	width: 40px
+}
+
+#weight_response {
+	width: 40px
+}
+
+#objectID_instructions {
+	font-size: 12pt;
+	margin-bottom: 10pt
+}
