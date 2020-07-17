@@ -2,3 +2,5 @@
 
 - `data`: raw data from the main experiment `data/main-1/` and a pilot study `data/pilot-1/`
 - `experiment`: js/html/css code for the experiment
+
+Go [here](https://www.mit.edu/~tessler/projects/amazon-world/experiments/amworld-1.html) for a demo of the experiment
