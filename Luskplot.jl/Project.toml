@@ -1,0 +1,11 @@
+name = "Luskplot"
+uuid = "9a011bee-ec03-4318-b72e-c80c02a1bcf1"
+authors = ["alex-lew <alexl.mail@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Conda = "8f4d0f93-b110-5947-807f-2305c1781a2d"
+Gen = "ea4f424c-a589-11e8-07c0-fd5c91b9da4a"
+LRUCache = "8ac3fa9e-de4c-5943-b1dc-09c6b5f20637"
+Memoize = "c03570c3-d221-55d1-a50c-7939bbd78826"
+PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
